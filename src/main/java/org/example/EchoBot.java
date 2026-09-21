@@ -8,26 +8,16 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 public class EchoBot implements LongPollingSingleThreadUpdateConsumer {
-
     private final TelegramClient telegramClient;
-
-    public EchoBot(String botToken) {
+    public EchoBot(String botToken){
         this.telegramClient = new OkHttpTelegramClient(botToken);
     }
-
     @Override
-    public void consume(Update update) {
+    public void consume(Update update){
         if (update.hasMessage() && update.getMessage().hasText()) {
-            String receivedText = update.getMessage().getText();
-            long chatId = update.getMessage().getChatId();
-
-            SendMessage message = SendMessage.builder()
-                    .chatId(chatId)
-                    .text(receivedText)
-                    .build();
-
+            SendMessage sendMessage = SendMessage.builder().chatId(update.getMessage().getChatId()).text(update.getMessage().getText()).build();
             try {
-                telegramClient.execute(message);
+                telegramClient.execute(sendMessage);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
